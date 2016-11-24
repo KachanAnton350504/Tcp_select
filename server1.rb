@@ -13,7 +13,6 @@ class Server
   def initialize(ip_address: 'localhost', port: '3002')
     @ip_address = ip_address
     @port = port
-    @oob_char = '?'
     @clients_select = Hash.new
     @reading = Array.new
     @writing = Array.new
@@ -46,15 +45,8 @@ class Server
           client = @clients_select[socket]
           @client = socket
           client.resume
-          # broadcast(message)
         end 
       end
-      # if (soket =  @server.accept)
-      #   @client, @client_address = soket
-      #   puts "Connected client with ip: #{address}"
-      #   check_client
-      #   listen_client
-      # end
     end
   end
 

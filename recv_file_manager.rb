@@ -5,7 +5,7 @@ class RecvFileManager
   F_SETOWN = 8 
   
   def initialize(socket)
-    @package_size = 8192
+    @package_size = 1024
     @header_file_size = 40
     @header_number_package_size = 20
     @header_eof_size = 1
@@ -35,11 +35,12 @@ class RecvFileManager
 
   def write_to_file file
     while true
-      package = @socket.recv(@package_size)
+      package = @socket.recv(@package_size, Socket::MSG_WAITALL)
       file.print package[@header_size..-1]
       break if signal_eof?(package) || package.empty?
       download_file_size = must_file_size(package)
     end
+    binding.pry
     download_file_size
   rescue Errno::EAGAIN
     retry

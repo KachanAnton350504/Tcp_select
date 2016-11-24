@@ -7,12 +7,9 @@ require './recv_file_manager'
 class Client
   include Socket::Constants
 
-  def initialize(ip_address: 'localhost', port: '3002', package_size: 60)
+  def initialize(ip_address: 'localhost', port: '3002')
     @ip_address = ip_address
     @port = port
-    @package_size = package_size
-    @header_size = 40
-    @oob_char = '!'
     connect_to_server
     send_server
   end

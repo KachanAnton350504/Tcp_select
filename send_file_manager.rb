@@ -1,6 +1,6 @@
 class SendFileManager
   def initialize(socket, address=nil)
-    @package_size = 8192
+    @package_size = 1024
     @address = address
     # @header_package_data = 60
     @header_file_size = 40
@@ -21,6 +21,7 @@ class SendFileManager
       package_header = file.eof? ? header(file.size, "eof") : header(file.size)
       send_size += @socket.send(package_header + package_data, 0)
       send_size -= package_header.size
+      
     end
     file.close
     message = @socket.recv(50)
