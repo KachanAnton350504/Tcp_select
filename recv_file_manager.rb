@@ -10,7 +10,6 @@ class RecvFileManager
     @header_number_package_size = 20
     @header_eof_size = 1
     @header_size = @header_file_size + @header_number_package_size + @header_eof_size
-  
     @socket = socket
   end
 
@@ -34,20 +33,22 @@ class RecvFileManager
   end
 
   def write_to_file file
+    package_size = @package_size
     while true
-      package = @socket.recv(@package_size, Socket::MSG_WAITALL)
-      file.print package[@header_size..-1]
-      break if signal_eof?(package) || package.empty?
+      package = @socket.read(package_size)
+      file.print package[@header_file_size..-1]
+      break if  package.empty? || signal_eof?(package)
       download_file_size = must_file_size(package)
-    end
-    binding.pry
+      diff = download_file_size - file.size + @header_file_size
+      package_size = diff < @package_size ? diff : @package_size
+      end
     download_file_size
   rescue Errno::EAGAIN
     retry
   end
 
   def must_file_size package
-    header = package[0...@header_size]
+    header = package[0...@header_file_size]
     header[0] = "0"
     header.to_i(2)
   end

@@ -8,7 +8,6 @@ require './recv_file_manager'
 class Server
   #include Socket::Constants
   include Command
-  F_SETOWN = 8   # set manual as not defined in Fcntl
 
   def initialize(ip_address: 'localhost', port: '3002')
     @ip_address = ip_address
