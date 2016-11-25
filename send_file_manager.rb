@@ -17,7 +17,7 @@ class SendFileManager
     file.pos = file_position.to_i
     wait_signal_int(send_size)
     while file.size > send_size
-      package_data = file.read(@package_size-@header_size)
+      package_data = file.read(@package_size-@header_file_size)
       package_header = file.eof? ? header(file.size, "eof") : header(file.size)
       send_size += @socket.send(package_header + package_data, 0)
       send_size -= package_header.size
@@ -44,7 +44,7 @@ class SendFileManager
   end 
   
   def header file_size, signal="send"
-    header = "%0#{@header_size}b" % file_size
+    header = "%0#{@header_file_size}b" % file_size
     header[0] = "0" if signal == "send"
     header[0] = "1" if signal == "eof"
     header
